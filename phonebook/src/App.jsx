@@ -2,12 +2,38 @@ import { useState, useEffect } from 'react'
 
 import axios from 'axios'
 
+import personService from './services/persons'
+import persons from './services/persons'
 
-const DisplayPersons = ({ persons }) => {
+
+const deletePerson = (person, persons, setPersons) => {
+  const name = person.name
+  const id = person.id
+
+  return  () => {
+    if (confirm(`Delete ${name}?`)) {
+      personService
+      .remove(id)
+      .then( deletedPerson => {
+        setPersons( persons.filter( p => p.id !== id ) )
+      } )
+      .catch ( error => {
+        console.log("Person doesn't exist in database")
+        setPersons( persons.filter( p => p.id !== id ) )
+      } )
+    }
+  }
+
+}
+
+const DisplayPersons = ({ persons, setPersons }) => {
   return (
     <div>
       {persons.map( person => 
-        <p key={person.id}>{`${person.name} and his number ${person.number}`}</p>
+        <p key={person.id}>
+          {`${person.name} and his number ${person.number}`}
+          <button onClick={deletePerson(person, persons, setPersons)}>delete</button>
+        </p>
        )}
     </div>
   )
@@ -52,10 +78,10 @@ const App = () => {
   const [newFilter, setNewFilter] = useState('')
 
   useEffect( () => {
-    axios
-    .get('http://localhost:3001/persons')
-    .then( promise => {
-      setPersons(promise.data)
+    personService
+    .getAll()
+    .then( allPerson => {
+      setPersons(allPerson)
     } )
   }, [])
 
@@ -71,18 +97,30 @@ const App = () => {
       return
     }
 
-    const person = {
+    const newPerson = {
       name: newName,
       number: newNumber,
-      id: String(persons.length + 1)
     }
 
     const notUniqueName = persons.some( (person) => person.name.toLowerCase() === newName.toLowerCase() )
-    const notUniqueNumber = persons.some( (person) => person.number === newNumber )
 
-    if (notUniqueName) alert(`Name: ${newName} is already added to phonebook.`)
-    else if (notUniqueNumber) alert(`Number: ${newNumber} is already added to phonebook`)
-    else setPersons(persons.concat(person))
+    if (notUniqueName) {
+      if (confirm(`${newName} already exists. Change his number?`)) {
+        const existingPerson = persons.find( person => person.name == newName )
+        personService
+        .update( existingPerson.id, newPerson )
+        .then( modifiedPerson => {
+          setPersons(persons.map( person => person.id === modifiedPerson.id ? modifiedPerson : person ))
+        })
+      }
+    }
+    else {
+      personService
+      .create(newPerson)
+      .then( person => {
+        setPersons(persons.concat(person))
+      } )
+    }
 
     setNewName('')
     setNewNumber('')
@@ -102,7 +140,7 @@ const App = () => {
 
 
       <h2>Numbers</h2>
-      <DisplayPersons persons={persons} />
+      <DisplayPersons persons={persons} setPersons={setPersons}/>
 
     </div>
   )
