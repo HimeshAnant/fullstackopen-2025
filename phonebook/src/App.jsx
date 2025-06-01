@@ -6,6 +6,26 @@ import personService from './services/persons'
 import persons from './services/persons'
 
 
+const Notification = ({ message, isError }) => {
+  if (message === null) return null
+
+  const messageStyle = {
+    backgroundColor:'lightGrey',
+    color:isError? 'red' : 'green',
+    padding:10,
+    fontSize:20,
+    borderStyle:'solid',
+    borderRadius:10,
+    marginBottom:10
+  }
+
+  return (
+    <div style={messageStyle}>
+      {message}
+    </div>
+  )
+}
+
 const deletePerson = (person, persons, setPersons) => {
   const name = person.name
   const id = person.id
@@ -40,6 +60,8 @@ const DisplayPersons = ({ persons, setPersons }) => {
 }
 
 const DisplayFilteredPersons = ({ prefix, persons }) => {
+  if (prefix === "") return null
+
   return (
     <div>
       {(persons.filter( person => person.name.slice(0, prefix.length).toLowerCase() === prefix.toLowerCase() )).map( person => 
@@ -76,6 +98,8 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [newFilter, setNewFilter] = useState('')
+  const [newMessage, setNewMessage] = useState(null)
+  const [newError, setNewError] = useState(null)
 
   useEffect( () => {
     personService
@@ -112,6 +136,11 @@ const App = () => {
         .then( modifiedPerson => {
           setPersons(persons.map( person => person.id === modifiedPerson.id ? modifiedPerson : person ))
         })
+        .catch( error => {
+          setPersons( persons.filter( (person) => person.name.toLowerCase() !== newPerson.name.toLowerCase() ) )
+          setNewError(`${newName} has already been deleted`)
+          setTimeout( () => setNewError(null), 5000 )
+        } )
       }
     }
     else {
@@ -119,6 +148,8 @@ const App = () => {
       .create(newPerson)
       .then( person => {
         setPersons(persons.concat(person))
+        setNewMessage(`Successfuly added ${person.name}`)
+        setTimeout( () => setNewMessage(null), 5000 )
       } )
     }
 
@@ -128,10 +159,12 @@ const App = () => {
 
   return (
     <div>
-      <h2>Phonebook</h2>
+      <h1>Phonebook</h1>
+      <Notification message={newMessage} isError={false}/>
+      <Notification message={newError} isError={true} />
       <Filter persons={persons} value={newFilter} onChange={handleInputChange(setNewFilter)}/>
 
-      <h2>Add a new</h2>
+      <h1>Add a new</h1>
       <PersonForm 
         onSubmit={addPerson} onChangeName={handleInputChange(setNewName)}
         onChangeNumber={handleInputChange(setNewNumber)} newName={newName}
@@ -139,7 +172,7 @@ const App = () => {
       />
 
 
-      <h2>Numbers</h2>
+      <h1>Numbers</h1>
       <DisplayPersons persons={persons} setPersons={setPersons}/>
 
     </div>
