@@ -17,7 +17,7 @@ morgan.token("postData", (request, response) => {
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :postData'))
 
 
-app.get('/api/persons', (request, response, error) => {
+app.get('/api/persons', (request, response, next) => {
     Person.find({})
         .then( persons => {
             response.json(persons)
@@ -58,7 +58,7 @@ app.delete('/api/persons/:id', (request, response, next) => {
 })
 
 
-app.post('/api/persons', (request, response) => {
+app.post('/api/persons', (request, response, next) => {
     const body = request.body
 
     if (!body.name) {
@@ -77,16 +77,22 @@ app.post('/api/persons', (request, response) => {
         number: body.number
     })
 
-    person.save().then( savedPerson => {
-        response.status(202).json(savedPerson)
-    })
+    person.save()
+        .then( savedPerson => {
+            response.status(202).json(savedPerson)
+        })
+        .catch(error => next(error))
 })
 
-app.put('/api/persons/:id', (request, response, error) => {
+app.put('/api/persons/:id', (request, response, next) => {
     const { name, number } = request.body
 
     Person.findById(request.params.id)
     .then(person => {
+        if (!person) {
+            return response.status(404).json({ error: 'person not found' })
+        }
+
         person.name = name
         person.number = number
 
@@ -115,6 +121,8 @@ const errorHandler = (error, request, response, next) => {
 
     if (error.name === "CastError") {
         return response.status(400).send({ error: 'malformat id' })
+    } else if (error.name === "ValidationError") {
+        return response.status(400).send({ error: error.message})
     }
 
     next(error)
