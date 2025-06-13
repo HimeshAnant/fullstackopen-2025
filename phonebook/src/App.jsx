@@ -137,9 +137,14 @@ const App = () => {
           setPersons(persons.map( person => person.id === modifiedPerson.id ? modifiedPerson : person ))
         })
         .catch( error => {
-          setPersons( persons.filter( (person) => person.name.toLowerCase() !== newPerson.name.toLowerCase() ) )
-          setNewError(`${newName} has already been deleted`)
-          setTimeout( () => setNewError(null), 5000 )
+          if (error.response.status === 404) {
+            setPersons( persons.filter( (person) => person.name.toLowerCase() !== newPerson.name.toLowerCase() ) )
+            setNewError(`${newName} has already been deleted`)
+            setTimeout( () => setNewError(null), 5000 )
+          }else {
+            setNewError(error.response.data.error)
+            setTimeout(() => setNewError(null), 5000)
+          }
         } )
       }
     }
@@ -151,6 +156,10 @@ const App = () => {
         setNewMessage(`Successfuly added ${person.name}`)
         setTimeout( () => setNewMessage(null), 5000 )
       } )
+      .catch(error => {
+        setNewError(error.response.data.error)
+        setTimeout(() => setNewError(null), 5000)
+      })
     }
 
     setNewName('')
