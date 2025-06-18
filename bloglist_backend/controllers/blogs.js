@@ -17,7 +17,8 @@ blogsRouter.post('/', async (request, response) => {
 
   const newBlog = new Blog({ ...request.body, user: user.id })
 
-  const savedBlog = await newBlog.save()
+  let savedBlog = await newBlog.save()
+  savedBlog = await savedBlog.populate('user', { name: 1, username: 1 })
 
   user.blogs = user.blogs.concat(savedBlog.id)
   await user.save()
@@ -30,7 +31,11 @@ blogsRouter.delete('/:id', async (request, response) => {
   if (!blog) {
     return response.status(404).end()
   }
+  if (!request.user) {
+    return response.status(401).json({ error: 'Delete needs token' })
+  }
 
+  console.log(blog, request.user)
   if (request.user.toString() !== blog.user.toString()) {
     return response.status(401).json({ error: 'unauthorized' })
   }
@@ -44,11 +49,14 @@ blogsRouter.delete('/:id', async (request, response) => {
 })
 
 blogsRouter.put('/:id', async (request, response) => {
-  const receivedBlog = await Blog.findByIdAndUpdate(request.params.id, request.body, { new: true, runValidators: true })
-  if (!receivedBlog) {
+  const blogToUpdate = await Blog.findById(request.params.id)
+  if (!blogToUpdate) {
     return response.status(404).end()
   }
-  response.json(receivedBlog)
+
+  blogToUpdate.likes = blogToUpdate.likes + 1
+  const updatedBlog = await blogToUpdate.save()
+  response.json(updatedBlog)
 })
 
 module.exports = blogsRouter
