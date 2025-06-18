@@ -1,223 +1,95 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import axios from 'axios'
+import BlogForm from './components/BlogForm'
+import DisplayBlogs from './components/DisplayBlogs'
+import Notification from './components/Notification'
+import LoginForm from './components/LoginForm'
+import Togglable from './components/Togglable'
 
 
-const handleInputChange = (setVar) => {
-  return ({ target }) => setVar(target.value)
-}
-
-const getNotificationStyle = (color) => {
-  const style = {
-    color: color,
-    background: 'lightGrey',
-    fontSize: 20,
-    borderStyle: 'solid',
-    borderRadius: 5,
-    padding: 10,
-    marginBottom: 10,
-  }
-
-  return style
-}
-
-const DisplayErrorMessage = ({ error }) => {
-  if (error === null){
-    return null
-  }
-
-  return (
-    <p style={getNotificationStyle('red')}>{error}</p>
-  )
-}
-
-const DisplaySuccessMessage = ({ message }) => {
-  if (message === null) {
-    return null
-  }
-
-  return (
-    <p style={getNotificationStyle('green')}>{message}</p>
-  )
-}
-
-const Login = ({ username, setUsername, password, setPassword, setUser, error, setError }) => {
-
-  const handleLogin = async (event) => {
-    event.preventDefault()
-    const user = { username, password }
-    let loggedUser = null
-    try
-    {
-    loggedUser = await axios
-      .post('/api/login', user)
-    }
-    catch(exception)
-    {
-      setError('wrong username or password')
-      setUsername('')
-      setPassword('')
-
-      setTimeout(() => setError(null), 5000)
-    }
-
-    if (loggedUser) {
-      setUsername('')
-      setPassword('')
-      setUser(loggedUser.data)
-      window.localStorage.setItem('blogAppUserData', JSON.stringify(loggedUser.data))
-    }
-  }
-
+const LoginPage = ({ setUser }) => {
+  const [error, setError] = useState(null)
   return (
     <div>
-      <h1>Log in to application</h1>
-      <DisplayErrorMessage error={error} />
-      <form onSubmit={handleLogin}>
-        <div>
-          username
-          <input
-            type="text"
-            value={username}
-            name="Username"
-            onChange={handleInputChange(setUsername)}
-          />
-        </div>
-        <div>
-          password
-          <input
-            type="password"
-            value={password}
-            name="Password"
-            onChange={handleInputChange(setPassword)}
-          />
-        </div>
-        <button type="submit">login</button>
-      </form>
+      <h1>Login</h1>
+      <Notification message={error} color={'red'} />
+      <LoginForm setUser={setUser} setError={setError} />
     </div>
   )
 }
 
+const BlogPage = ({ user, setUser }) => {
+  const [blogs, setBlogs] = useState([])
+  const [message, setMessage] = useState(null)
+  const [error, setError] = useState(null)
 
-const DisplayUserBlogs = ({ blogs }) => {
-  const titleStyle = {
-    margin: 1,
-    font: 16,
+  const blogFormRef = useRef()
+
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      const response = await axios.get('/api/blogs')
+      const fetchedBlogs = response.data
+      setBlogs(fetchedBlogs.sort((blogA, blogB) =>
+        blogB.likes - blogA.likes
+      ))
+    }
+
+    fetchBlogs()
+  }, [])
+
+  const handleLogOut = () => {
+    setUser(null)
+    window.localStorage.removeItem('blogAppUserData')
   }
 
-  return (
-    <div>
-      {blogs.map(blog => 
-          <p key={blog.id} style={titleStyle}>{blog.title} - {blog.author}</p>
-        )}
-    </div>
-  )
-}
-
-const AddBlog = ({ user, title, setTitle, author, setAuthor, url, setUrl, message, setMessage }) => {
-  const handleCreateBlog = async (event) => {
-    event.preventDefault()
-
-    const newBlog = {
-      title,
-      author,
-      url
-    }
-
-    const config = {
-      headers: { Authorization: `Bearer ${user.token}` },
-    }
-
+  const createNewBlog = async (newBlog) => {
     try
     {
-      await axios.post('/api/blogs', newBlog, config)
-      setTitle('')
-      setAuthor('')
-      setUrl('')
+      const config = {
+        headers: { Authorization: `Bearer ${user.token}` },
+      }
+      const response = await axios.post('/api/blogs', newBlog, config)
 
-      setMessage(`a new blog ${newBlog.title} by ${newBlog.author} added`)
+      const newBlogs = blogs.concat(response.data)
+      setBlogs(newBlogs.sort((blogA, blogB) =>
+        blogB.likes - blogA.likes
+      ))
+
+      setMessage(`a new blog '${newBlog.title}' by '${newBlog.author}' added`)
       setTimeout(() => setMessage(null), 5000)
     }
     catch(exception)
     {
-      console.log('error in adding blog', exception)
+      console.log(exception.message)
+      setError('error posting blog')
+
+      setTimeout(() => setError(null), 5000)
     }
-  }
-
-  return (
-    <div>
-      <h1>create new</h1>
-      <DisplaySuccessMessage message={message} />
-      <form onSubmit={handleCreateBlog}>
-        <div>
-          title
-          <input 
-            type="text"
-            value={title}
-            onChange={handleInputChange(setTitle)} 
-          />
-        </div>
-        <div>
-          author
-          <input 
-            type="text"
-            value={author}
-            onChange={handleInputChange(setAuthor)} 
-          />
-        </div>
-        <div>
-          url
-          <input 
-            type="text"
-            value={url}
-            onChange={handleInputChange(setUrl)} 
-          />
-        </div>
-        <button type="submit">create</button>
-      </form>
-    </div>
-  )
-}
-
-const Blogs = ({ user, setUser, blogs, title, setTitle, author, setAuthor, url, setUrl, message, setMessage }) => {
-  const handleLogOut = (event) => {
-    setUser(null)
-    window.localStorage.removeItem('blogAppUserData')
   }
 
   return (
     <div>
       <h1>Blogs</h1>
+      <Notification message={message} color={'green'} />
+      <Notification message={error} color={'red'} />
       <div>
         {user.name} logged in
         <button onClick={handleLogOut}>logout</button>
       </div>
 
-      <AddBlog user={user} title={title} setTitle={setTitle} 
-        author={author} setAuthor={setAuthor} url={url} 
-        setUrl={setUrl} message={message} setMessage={setMessage}
-      />
+      <h1>create new</h1>
+      <Togglable buttonLabel={'add Blog'} ref={blogFormRef}>
+        <BlogForm createNewBlog={createNewBlog} />
+      </Togglable>
 
-      <DisplayUserBlogs blogs={blogs} />
+      <DisplayBlogs user={user} blogs={blogs} setBlogs={setBlogs} />
     </div>
   )
 }
 
 const App = () => {
   const [user, setUser] = useState(null)
-  const [blogs, setBlogs] = useState([])
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
-  const [error, setError] = useState(null)
-  const [message, setMessage] = useState(null)
 
-  useEffect(() => {
-    axios
-      .get('/api/blogs')
-      .then(response => setBlogs(response.data))
-  }, [])
 
   useEffect(() => {
     const loggedUser = window.localStorage.getItem('blogAppUserData')
@@ -228,18 +100,11 @@ const App = () => {
 
   return (
     <div>
-    {
-      user === null
-      ? <Login username={username} setUsername={setUsername} password={password} 
-          setPassword={setPassword} setUser={setUser} error={error} 
-          setError={setError}
-        />
-      : <Blogs user={user} setUser={setUser} blogs={blogs}
-          title={title} setTitle={setTitle} author={author}
-          setAuthor={setAuthor} url={url} setUrl={setUrl}
-          message={message} setMessage={setMessage}
-        />
-    }
+      {
+        user === null
+          ? <LoginPage setUser={setUser} />
+          : <BlogPage user={user} setUser={setUser} />
+      }
     </div>
   )
 }
