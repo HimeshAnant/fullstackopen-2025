@@ -44,6 +44,7 @@ const LoginForm = ({ setUser, setError }) => {
             value={username}
             name="Username"
             onChange={event => setUsername(event.target.value)}
+            placeholder='enter username'
           />
         </div>
         <div>
@@ -53,6 +54,7 @@ const LoginForm = ({ setUser, setError }) => {
             value={password}
             name="Password"
             onChange={event => setPassword(event.target.value)}
+            placeholder='enter password'
           />
         </div>
         <button type="submit">login</button>

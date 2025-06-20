@@ -53,11 +53,11 @@ const BlogDetail = ({ user, blog, blogs, setBlogs }) => {
   }
 
   return (
-    <div style={blogStyle}>
+    <div style={blogStyle} data-testid='blogDetail'>
       <a href='https://google.com' target="_blank" rel="noopener noreferrer">{blog.url}</a>
 
       <div>
-        likes: {blog.likes}
+        <span data-testid='like-count'>likes: {blog.likes}</span>
         <button onClick={handleLikeClick}>like</button>
       </div>
 
@@ -77,7 +77,7 @@ const Blog = ({ user, blog, blogs, setBlogs }) => {
   const buttonLabel = (visibility ? 'hide' : 'show' )
 
   return (
-    <div>
+    <div data-testid='blog'>
       {blog.title} {blog.author}
       <button onClick={() => setVisibility(!visibility)}>{buttonLabel}</button>
 
