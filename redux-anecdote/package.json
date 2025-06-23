@@ -1,5 +1,5 @@
 {
-  "name": "unicafe",
+  "name": "redux-anecdote",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -7,29 +7,24 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview",
-    "test": "jest"
+    "preview": "vite preview"
   },
   "dependencies": {
-    "@stylistic/eslint-plugin-js": "^4.4.1",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
+    "react-redux": "^9.2.0",
     "redux": "^5.0.1"
   },
   "devDependencies": {
-    "@babel/preset-env": "^7.27.2",
-    "@babel/preset-react": "^7.27.1",
     "@eslint/js": "^9.25.0",
+    "@stylistic/eslint-plugin": "^5.0.0",
     "@types/react": "^19.1.2",
     "@types/react-dom": "^19.1.2",
     "@vitejs/plugin-react": "^4.4.1",
-    "deep-freeze": "^0.0.1",
     "eslint": "^9.25.0",
-    "eslint-plugin-jest": "^29.0.1",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.19",
     "globals": "^16.0.0",
-    "jest": "^30.0.2",
     "vite": "^6.3.5"
   }
 }
