@@ -1,0 +1,1 @@
+DELETE http://localhost:3001/anecdotes/45cb

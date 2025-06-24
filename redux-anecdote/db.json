@@ -1,0 +1,109 @@
+{
+  "anecdotes": [
+    {
+      "id": "89899",
+      "content": "Debugging is like being the detective in a crime movie where you are also the murderer.",
+      "votes": 14
+    },
+    {
+      "id": "29838",
+      "content": "In theory, theory and practice are the same. In practice, they are not.",
+      "votes": 15
+    },
+    {
+      "id": "98234",
+      "content": "The best thing about a boolean is even if you are wrong, you are only off by a bit.",
+      "votes": 0
+    },
+    {
+      "id": "77799",
+      "content": "Programmer: A machine that turns coffee into code.",
+      "votes": 0
+    },
+    {
+      "id": "90238",
+      "content": "Weeks of programming can save you hours of planning.",
+      "votes": 0
+    },
+    {
+      "content": "If it hurts, do it more often",
+      "id": "47145",
+      "votes": 0
+    },
+    {
+      "content": "Adding manpower to a late software project makes it later!",
+      "id": "21149",
+      "votes": 0
+    },
+    {
+      "content": "The first 90 percent of the code accounts for the first 10 percent of the development time...The remaining 10 percent of the code accounts for the other 90 percent of the development time.",
+      "id": "69581",
+      "votes": 18
+    },
+    {
+      "content": "Any fool can write code that a computer can understand. Good programmers write code that humans can understand.",
+      "id": "36975",
+      "votes": 0
+    },
+    {
+      "content": "Premature optimization is the root of all evil.",
+      "id": "25170",
+      "votes": 0
+    },
+    {
+      "content": "Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.",
+      "id": "98312",
+      "votes": 0
+    },
+    {
+      "id": "6bb0",
+      "content": "let's see haa",
+      "votes": 0
+    },
+    {
+      "id": "5e67",
+      "content": "somethign weird",
+      "votes": 0
+    },
+    {
+      "id": "ef5c",
+      "content": "let's see that",
+      "votes": 0
+    },
+    {
+      "id": "aa39",
+      "content": "jeez",
+      "votes": 0
+    },
+    {
+      "id": "e8a7",
+      "content": "jeez",
+      "votes": 0
+    },
+    {
+      "id": "9ab4",
+      "content": "now it's all good, phew",
+      "votes": 0
+    },
+    {
+      "id": "503d",
+      "content": "you do know that all these notes are getting saved to database?",
+      "votes": 0
+    },
+    {
+      "id": "61f6",
+      "content": "once an old man said, le ching che quin quo",
+      "votes": 0
+    },
+    {
+      "id": "22d9",
+      "content": "cool man once said, ice sticks ought to be erased from earth",
+      "votes": 0
+    },
+    {
+      "id": "4103",
+      "content": "there once was an old and proud great oak in the middle of forest, it stood proudly for centuries",
+      "votes": 11
+    }
+  ]
+}
