@@ -1,0 +1,59 @@
+{
+  "anecdotes": [
+    {
+      "id": "4343",
+      "content": "strange",
+      "votes": 13
+    },
+    {
+      "id": "2f61",
+      "content": "strange things have ended",
+      "votes": 6
+    },
+    {
+      "id": "1030",
+      "content": "did y'all know that this kinds of things actually exists in real life?",
+      "votes": 2
+    },
+    {
+      "id": "b919",
+      "content": "you wouldn't even be able to sleep if i were to tell you all what i saw back in that forest",
+      "votes": 0
+    },
+    {
+      "id": "08a5",
+      "content": "just thinking about it makes my bones shiver",
+      "votes": 0
+    },
+    {
+      "id": "5dc5",
+      "content": "Ha, gotcha' i was just lying, so go ahead and forget all this stuff and just sleep..",
+      "votes": 36
+    },
+    {
+      "id": "f7ce",
+      "content": "makeing sure",
+      "votes": 2
+    },
+    {
+      "id": "76c4",
+      "content": "death comes to all",
+      "votes": 19
+    },
+    {
+      "id": "afb8",
+      "content": "hoho",
+      "votes": 0
+    },
+    {
+      "id": "67aa",
+      "content": "i feel sleeepy dammit",
+      "votes": 1
+    },
+    {
+      "id": "0232",
+      "content": "lagta hai kyun",
+      "votes": 1
+    }
+  ]
+}
