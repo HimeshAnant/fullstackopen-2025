@@ -1,11 +1,11 @@
 import {
   Routes, Route, Link,
-  useParams,
   useMatch,
   useNavigate,
 } from 'react-router-dom'
-
 import { useState } from 'react'
+
+import { useField } from './hooks/index'
 
 
 const Anecdotes = ({ anecdotes }) => {
@@ -42,28 +42,30 @@ const Anecdote = ({ anecdote }) => {
 const AnecdoteForm = ({ addAnecdote, setNotification }) => {
   const navigate = useNavigate()
 
+  const content = useField('text')
+  const author = useField('text')
+  const info = useField('text')
+
   const handleFormSubmit = (event) => {
     event.preventDefault()
 
-    const content = event.target.content.value
-    const author = event.target.author.value
-    const info = event.target.info.value
-
     const newAnecdote = {
-      content,
-      author,
-      info
+      content: content.inputProps.value,
+      author: author.inputProps.value,
+      info: info.inputProps.value
     }
     addAnecdote(newAnecdote)
 
-    event.target.content.value = ''
-    event.target.author.value = ''
-    event.target.info.value = ''
-
-    setNotification(`a new anecdote '${content}' was created!`)
+    setNotification(`a new anecdote '${content.inputProps.value}' was created!`)
     setTimeout(() => setNotification(null), 5000)
 
     navigate('/')
+  }
+
+  const handleReset = () => {
+    content.reset()
+    author.reset()
+    info.reset()
   }
 
   return (
@@ -72,18 +74,19 @@ const AnecdoteForm = ({ addAnecdote, setNotification }) => {
 
       <form onSubmit={handleFormSubmit}>
         <div>
-          content<input name="content"/>
+          content<input { ...content.inputProps }/>
         </div>
 
         <div>
-          author<input name="author"/>
+          author<input { ...author.inputProps } />
         </div>
 
         <div>
-          url for more info<input name="info"/>
+          url for more info<input { ...info.inputProps } />
         </div>
 
         <button type="submit">create</button>
+        <button type="button" onClick={handleReset}>reset</button>
       </form>
     </div>
   )
