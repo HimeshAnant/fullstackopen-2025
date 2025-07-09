@@ -1,0 +1,23 @@
+{
+  "name": "graphql-library",
+  "version": "1.0.0",
+  "description": "",
+  "license": "ISC",
+  "author": "Himesh",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.30.1",
+    "eslint": "^9.30.1",
+    "eslint-plugin-react": "^7.37.5",
+    "globals": "^16.3.0"
+  },
+  "dependencies": {
+    "@apollo/server": "^4.12.2",
+    "graphql": "^16.11.0",
+    "uuid": "^11.1.0"
+  }
+}
